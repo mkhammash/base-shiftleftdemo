@@ -18,7 +18,7 @@ spec:
         app: evilpetclinic
     spec:
       containers:
-      - image: harbor-registry-https.com/library/evilpetclinic:latest
+      - image: solalraveh/evilpetclinic:latest
         name: evilpetclinic
         imagePullPolicy: IfNotPresent
         resources: {}

@@ -42,7 +42,7 @@ node {
             withCredentials([usernamePassword(credentialsId: 'twistlock_creds', passwordVariable: 'TL_PASS', usernameVariable: 'TL_USER')]) {
                 sh 'curl -k -u $TL_USER:$TL_PASS --output ./twistcli https://$TL_CONSOLE/api/v1/util/twistcli'
                 sh 'sudo chmod a+x ./twistcli'
-                sh "./twistcli images scan --u $TL_USER --p $TL_PASS --address https://$TL_CONSOLE --details harbor-registry.com/library/evilpetclinic:latest"
+                sh "./twistcli images scan --u $TL_USER --p $TL_PASS --address https://$TL_CONSOLE --details solalraveh/evilpetclinic:latest"
             }
         } catch (err) {
             echo err.getMessage()
@@ -111,6 +111,7 @@ stage("Scan Cloud Formation Template with API v2") {
 //    }
 
     stage('Deploy evilpetclinic') {
+        sh 'kubectl create ns evil --dry-run -o yaml | kubectl apply -f -'
         sh 'kubectl delete --ignore-not-found=true -f files/deploy.yml -n evil'
         sh 'kubectl apply -f files/deploy.yml -n evil'
         sh 'sleep 10'
