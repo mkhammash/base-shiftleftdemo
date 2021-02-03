@@ -5,4 +5,6 @@ Until this is committed to the demo-build source code and then its own Gogs and 
 
 The Git scan is performed against https://github.com/se-cloud-emea/evil.petclinic so you'll need to add that into your Twistlock Console as a Git repo to scan, including a token: https://docs.twistlock.com/docs/compute_edition/vulnerability_management/code_repo_scanning.html
 
+Link to running this demo: https://drive.google.com/file/d/1fFPoteVm61hqeQOb40Uzhdxw-DKDkLtG/view
+
 PC_USER,PC_PASS and PC_CONSOLE are pre populated from the yaml file from the central demo build. 
