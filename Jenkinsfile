@@ -23,7 +23,7 @@ node {
     }
 
     //$PC_USER,$PC_PASS,$PC_CONSOLE when Galileo is released. 
-    stage('Apply Policy-as-Code for evilpetclinic') {
+    stage('Apply security policies (Policy-as-Code) for evilpetclinic') {
         withCredentials([usernamePassword(credentialsId: 'twistlock_creds', passwordVariable: 'TL_PASS', usernameVariable: 'TL_USER')]) {
             sh('chmod +x files/addPolicies.sh && ./files/addPolicies.sh')
         }
@@ -115,6 +115,10 @@ stage("Scan Cloud Formation Template with API v2") {
         sh 'kubectl delete --ignore-not-found=true -f files/deploy.yml -n evil'
         sh 'kubectl apply -f files/deploy.yml -n evil'
         sh 'sleep 10'
+    }
+
+    stage('Run bad Runtime attacks') {
+        sh('chmod +x files/runtime_attacks.sh && ./files/runtime_attacks.sh')
     }
 
     stage('Run bad HTTP stuff for WAAS to catch') {
