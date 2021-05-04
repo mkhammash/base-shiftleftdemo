@@ -122,7 +122,7 @@ stage("Scan Cloud Formation Template with API v2") {
         sh('chmod +x files/runtime_attacks.sh && ./files/runtime_attacks.sh')
     }
 
-    stage('Run bad HTTP stuff for WAAS to catch') {
-        sh('chmod +x files/waas_attacks.sh && ./files/waas_attacks.sh')
-    }
+    //stage('Run bad HTTP stuff for WAAS to catch') {
+    //    sh('chmod +x files/waas_attacks.sh && ./files/waas_attacks.sh')
+    //}
 }
