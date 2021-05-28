@@ -40,17 +40,30 @@ node {
     stage('Scan image with twistcli') {
         try {
 	    sh 'docker pull solalraveh/evilpetclinic:latest'
-            withCredentials([usernamePassword(credentialsId: 'twistlock_creds', passwordVariable: 'TL_PASS', usernameVariable: 'TL_USER')]) {
-                sh 'curl -k -u $TL_USER:$TL_PASS --output ./twistcli https://$TL_CONSOLE/api/v1/util/twistcli'
-                sh 'sudo chmod a+x ./twistcli'
-                sh "./twistcli images scan --u $TL_USER --p $TL_PASS --address https://$TL_CONSOLE --details solalraveh/evilpetclinic:latest"
-            }
+            //withCredentials([usernamePassword(credentialsId: 'twistlock_creds', passwordVariable: 'TL_PASS', usernameVariable: 'TL_USER')]) {
+            //    sh 'curl -k -u $TL_USER:$TL_PASS --output ./twistcli https://$TL_CONSOLE/api/v1/util/twistcli'
+            //    sh 'sudo chmod a+x ./twistcli'
+            //    sh "./twistcli images scan --u $TL_USER --p $TL_PASS --address https://$TL_CONSOLE --details solalraveh/evilpetclinic:latest"
+            //}
+	    // Scan the image
+            prismaCloudScanImage ca: '',
+            cert: '',
+            dockerAddress: 'unix:///var/run/docker.sock',
+            image: 'solalraveh/evilpetclinic:latest',
+            key: '',
+            logLevel: 'info',
+            podmanPath: '',
+            project: '',
+            resultsFile: 'prisma-cloud-scan-results.json',
+            ignoreImageBuildTime:true
         } catch (err) {
+	    prismaCloudPublish resultsFilePattern: 'prisma-cloud-scan-results.json'
             echo err.getMessage()
             echo "Error detected"
 			throw RuntimeException("Build failed for some specific reason!")
         }
     }
+
 
 stage("Scan Cloud Formation Template with API v2") {
 
@@ -122,7 +135,14 @@ stage("Scan Cloud Formation Template with API v2") {
         sh('chmod +x files/runtime_attacks.sh && ./files/runtime_attacks.sh')
     }
 
-    //stage('Run bad HTTP stuff for WAAS to catch') {
-    //    sh('chmod +x files/waas_attacks.sh && ./files/waas_attacks.sh')
-    //}
+    stage('Run bad HTTP stuff for WAAS to catch') {
+        sh('chmod +x files/waas_attacks.sh && ./files/waas_attacks.sh')
+    }
+	
+    post {
+        always {
+            // The post section lets you run the publish step regardless of the scan results
+            prismaCloudPublish resultsFilePattern: 'prisma-cloud-scan-results.json'
+        }
+    }
 }
