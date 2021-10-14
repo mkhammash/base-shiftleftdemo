@@ -18,7 +18,7 @@ spec:
         app: evilpetclinic
     spec:
       containers:
-      - image: solalraveh/evilpetclinic:latest
+      - image: mkhammash/evilpetclinic:latest
         name: evilpetclinic
         imagePullPolicy: IfNotPresent
         resources: {}
