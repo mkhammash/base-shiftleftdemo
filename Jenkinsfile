@@ -65,49 +65,49 @@ node {
     }
 
 
-stage("Scan Cloud Formation Template with API v2") {
+//stage("Scan Cloud Formation Template with API v2") {
 
-        def response
+       // def response
 
 
-        response = sh(script:"curl -sq -X POST -H 'x-redlock-auth: ${PC_TOKEN}' -H 'Content-Type: application/vnd.api+json' --url https://${AppStack}/iac/v2/scans --data-binary '@scan-asset.json'", returnStdout:true).trim()
+        //response = sh(script:"curl -sq -X POST -H 'x-redlock-auth: ${PC_TOKEN}' -H 'Content-Type: application/vnd.api+json' --url https://${AppStack}/iac/v2/scans --data-binary '@scan-asset.json'", returnStdout:true).trim()
 
-        def SCAN_ASSET = readJSON text: response
+        //def SCAN_ASSET = readJSON text: response
 
-        def SCAN_ID = SCAN_ASSET['data'].id
-        def SCAN_URL = SCAN_ASSET['data']['links'].url
+        //def SCAN_ID = SCAN_ASSET['data'].id
+       // def SCAN_URL = SCAN_ASSET['data']['links'].url
 
         //Upload files
-        sh(script:"curl -sq -X PUT  --url '${SCAN_URL}' -T 'files/deploy.yml'", returnStdout:true).trim()
+        //sh(script:"curl -sq -X PUT  --url '${SCAN_URL}' -T 'files/deploy.yml'", returnStdout:true).trim()
 
         //start the Scan
-        response = sh(script:"curl -sq -X POST -H 'x-redlock-auth: ${PC_TOKEN}' -H 'Content-Type: application/vnd.api+json' --url https://${AppStack}/iac/v2/scans/${SCAN_ID} --data-binary '@scan-start-k8s.json'", returnStdout:true).trim()
+        //response = sh(script:"curl -sq -X POST -H 'x-redlock-auth: ${PC_TOKEN}' -H 'Content-Type: application/vnd.api+json' --url https://${AppStack}/iac/v2/scans/${SCAN_ID} --data-binary '@scan-start-k8s.json'", returnStdout:true).trim()
 
 
         //Get the Status
-        def SCAN_STATUS
-        def STATUS
+        //def SCAN_STATUS
+        //def STATUS
 
         //Need a Do-While loop here.   Haven't found a good syntax with Groovy in Jenkins
-        response = sh(script:"curl -sq -H 'x-redlock-auth: ${PC_TOKEN}' -H 'Content-Type: application/vnd.api+json' --url https://${AppStack}/iac/v2/scans/${SCAN_ID}/status", returnStdout:true).trim()
-        SCAN_STATUS = readJSON text: response
-        STATUS = SCAN_STATUS['data']['attributes']['status']
+        //response = sh(script:"curl -sq -H 'x-redlock-auth: ${PC_TOKEN}' -H 'Content-Type: application/vnd.api+json' --url https://${AppStack}/iac/v2/scans/${SCAN_ID}/status", returnStdout:true).trim()
+        //SCAN_STATUS = readJSON text: response
+        //STATUS = SCAN_STATUS['data']['attributes']['status']
 
-        while  (STATUS == 'processsing'){
-            response = sh(script:"curl -sq -H 'x-redlock-auth: ${PC_TOKEN}' -H 'Content-Type: application/vnd.api+json' --url https://${AppStack}/iac/v2/scans/${SCAN_ID}/status", returnStdout:true).trim()
-            SCAN_STATUS = readJSON text: response
-            STATUS = SCAN_STATUS['data']['attributes']['status']
-            print "${STATUS}"
+       // while  (STATUS == 'processsing'){
+        //    response = sh(script:"curl -sq -H 'x-redlock-auth: ${PC_TOKEN}' -H 'Content-Type: application/vnd.api+json' --url https://${AppStack}/iac/v2/scans/${SCAN_ID}/status", returnStdout:true).trim()
+        //    SCAN_STATUS = readJSON text: response
+         //   STATUS = SCAN_STATUS['data']['attributes']['status']
+         //   print "${STATUS}"
 
-        }
+       // }
 
         //Get the Results
-        response = sh(script:"curl -sq -H 'x-redlock-auth: ${PC_TOKEN}' -H 'Content-Type: application/vnd.api+json' --url https://${AppStack}/iac/v2/scans/${SCAN_ID}/results", returnStdout:true).trim()
-        def SCAN_RESULTS= readJSON text: response
+        //response = sh(script:"curl -sq -H 'x-redlock-auth: ${PC_TOKEN}' -H 'Content-Type: application/vnd.api+json' --url https://${AppStack}/iac/v2/scans/${SCAN_ID}/results", returnStdout:true).trim()
+        //def SCAN_RESULTS= readJSON text: response
 
-        print "${SCAN_RESULTS}"
+       // print "${SCAN_RESULTS}"
 
-}
+//}
 
 //    files.each { item ->
 //        stage("Scan IaC file ${item} with twistcli") {
